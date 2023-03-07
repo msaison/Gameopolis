@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:gameopolis/games/flappybird/game.dart';
 import 'package:gameopolis/utils/utils.dart';
 
@@ -18,9 +17,6 @@ class BirdPlayer extends SpriteAnimationGroupComponent<PlayerState>
   final double fallingConstant = -500.0;
   final Vector2 birdSize = Vector2(17, 12);
   final Vector2 _resetPos;
-
-  final _collisionStartColor = Colors.amber;
-  final _defaultColor = Colors.cyan;
 
   final Map<PlayerColor, List<Vector2>> _playerColorMap = {
     PlayerColor.blue: [Vector2(87, 491), Vector2(115, 329), Vector2(115, 329)],
@@ -46,16 +42,9 @@ class BirdPlayer extends SpriteAnimationGroupComponent<PlayerState>
 
     current = PlayerState.waiting;
 
-    final defaultPaint = Paint()
-      ..color = _defaultColor
-      ..style = PaintingStyle.stroke;
-
     size = Vector2(birdSize.x * gameRef.size.x / screenSize.width, birdSize.y * gameRef.size.y / screenSize.height);
 
-    add(RectangleHitbox()
-      ..collisionType = CollisionType.active
-      ..paint = defaultPaint
-      ..renderShape = true);
+    add(RectangleHitbox()..collisionType = CollisionType.active);
   }
 
   @override

@@ -95,6 +95,7 @@ class FlappyBirdGame extends FlameGame
   }
 
   void gameOver() {
+    _highscore = score;
     state = GameState.gameOver;
     player.reset();
     ground.reset();

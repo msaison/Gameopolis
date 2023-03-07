@@ -16,9 +16,6 @@ class Ground extends PositionComponent with HasGameRef<FlappyBirdGame> {
   static final Vector2 lineSize = Vector2(168, 56);
   final Queue<SpriteComponent> groundLayers = Queue();
 
-  final _collisionStartColor = Colors.amber;
-  final _defaultColor = Colors.cyan;
-
   late final _mooveSprite = Sprite(
     gameRef.spriteImageFlappy,
     srcPosition: Vector2(292.0, 0),
@@ -32,14 +29,9 @@ class Ground extends PositionComponent with HasGameRef<FlappyBirdGame> {
 
   @override
   FutureOr<void> onLoad() {
-    final defaultPaint = Paint()
-      ..color = _defaultColor
-      ..style = PaintingStyle.stroke;
     add(RectangleHitbox(
       size: Vector2(gameRef.size.x, _sizeYground),
-    )
-      ..paint = defaultPaint
-      ..renderShape = true);
+    ));
 
     return super.onLoad();
   }
