@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:gameopolis/games/flappybird/game.dart';
@@ -14,12 +15,14 @@ class GetSprite extends SpriteComponent with HasGameRef<FlappyBirdGame>, TapCall
       bool scale = false,
       required Vector2 Function(Vector2 size) pos,
       void Function()? onTap,
-      Anchor? anchor})
+      Anchor? anchor,
+      bool isCollide = false})
       : _srcPos = srcPos,
         _srcSi = srcSi,
         _scale = scale,
         _pos = pos,
         _onTap = onTap,
+        _isCollide = isCollide,
         super(anchor: anchor);
 
   final Vector2 _srcPos;
@@ -27,6 +30,7 @@ class GetSprite extends SpriteComponent with HasGameRef<FlappyBirdGame>, TapCall
   final bool _scale;
   final Vector2 Function(Vector2 size) _pos;
   final void Function()? _onTap;
+  final bool _isCollide;
 
   @override
   void onTapUp([TapUpEvent? event]) => _onTap?.call();
@@ -35,6 +39,15 @@ class GetSprite extends SpriteComponent with HasGameRef<FlappyBirdGame>, TapCall
   Future<void> onLoad() async {
     sprite = Sprite(gameRef.spriteImageFlappy, srcPosition: _srcPos, srcSize: _srcSi);
     position = _pos(gameRef.size);
+
+    if (_isCollide && !isRemoved) {
+      add(
+        RectangleHitbox()
+          ..collisionType = CollisionType.active
+          ..paint = paintCollision
+          ..renderShape = true
+      );
+    }
   }
 
   @override

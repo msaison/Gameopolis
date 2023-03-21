@@ -68,3 +68,9 @@ class ShowGames {
     return _gameWidget;
   }
 }
+
+
+final Paint paintCollision = Paint()
+  ..color = Colors.white
+  ..style = PaintingStyle.stroke
+  ..strokeWidth = 2;

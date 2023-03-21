@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:gameopolis/games/flappybird/components/bird.dart';
 import 'package:gameopolis/games/flappybird/components/get_sprite.dart';
 import 'package:gameopolis/games/flappybird/components/ground.dart';
+import 'package:gameopolis/games/flappybird/components/pipe/pipe_manager.dart';
 import 'package:gameopolis/games/flappybird/components/text.dart';
 import 'package:gameopolis/games/flappybird/panels/gameover.dart';
 import 'package:gameopolis/games/flappybird/panels/intro.dart';
@@ -35,8 +36,9 @@ class FlappyBirdGame extends FlameGame
 
   late final background =
       GetSprite(srcPos: Vector2(0, 0), srcSi: Vector2(144, 256), pos: (n) => Vector2(0, 0), anchor: Anchor.topLeft);
-  late final ground = Ground();
+  late final pipe = PipeManager();
   late final textScore = TextUpdate('');
+  late final ground = Ground();
   late final player = BirdPlayer(pos: Vector2(gameRef.size.x * 0.30, gameRef.size.y * 0.4));
   late final introPanel = Intro();
   late final getReadyPanel = GetReady();
@@ -46,7 +48,7 @@ class FlappyBirdGame extends FlameGame
   int score = 0;
   int _highscore = 0;
 
-  double currentSpeed = 100;
+  double currentSpeed = 150;
 
   String scoreString(int score) => score.toString().padLeft(5, '0');
 
@@ -54,6 +56,7 @@ class FlappyBirdGame extends FlameGame
   Future<void> onLoad() async {
     spriteImageFlappy = await Flame.images.load('sprites.png');
     add(background);
+    add(pipe);
     add(ground);
     add(textScore);
     add(player);
@@ -97,7 +100,6 @@ class FlappyBirdGame extends FlameGame
   void gameOver() {
     _highscore = score;
     state = GameState.gameOver;
-    player.reset();
     ground.reset();
     score = 0;
     gameOverPanel.visible = true;
@@ -107,33 +109,13 @@ class FlappyBirdGame extends FlameGame
   void getReady() {
     state = GameState.getReady;
     if (!introPanel.isRemoved) remove(introPanel);
-    player.resetPos();
     getReadyPanel.visible = true;
     textScore.updateText(score.toString());
+    pipe.reset();
   }
 
   void start() {
     state = GameState.playing;
     getReadyPanel.visible = false;
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-
-    if (isIntro) {
-      return;
-    }
-
-    if (isGameOver) {
-      return;
-    }
-
-    if (isPlaying) {
-      // timePlaying += dt;
-      // _distanceTraveled += dt * currentSpeed;
-      // score = _distanceTraveled ~/ 50;
-      // textScore.updateText((_distanceTraveled ~/ 50).toString());
-    }
   }
 }

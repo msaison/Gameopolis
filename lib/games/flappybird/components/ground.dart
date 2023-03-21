@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
-import 'package:flutter/material.dart';
 import 'package:gameopolis/games/flappybird/components/utils.dart';
 import 'package:gameopolis/games/flappybird/game.dart';
 import 'package:gameopolis/utils/utils.dart';
@@ -32,7 +31,6 @@ class Ground extends PositionComponent with HasGameRef<FlappyBirdGame> {
     add(RectangleHitbox(
       size: Vector2(gameRef.size.x, _sizeYground),
     ));
-
     return super.onLoad();
   }
 
@@ -40,8 +38,10 @@ class Ground extends PositionComponent with HasGameRef<FlappyBirdGame> {
   void update(double dt) {
     super.update(dt);
     final increment = gameRef.currentSpeed * dt;
-    for (final line in groundLayers) {
-      line.x -= increment;
+    if (gameRef.isPlaying) {
+      for (final line in groundLayers) {
+        line.x -= increment;
+      }
     }
 
     final firstLine = groundLayers.first;
@@ -80,46 +80,5 @@ class Ground extends PositionComponent with HasGameRef<FlappyBirdGame> {
       )..x = 0 + lineSize.x * i,
       growable: false,
     );
-  }
-}
-
-class RectangleCollidable extends PositionComponent with CollisionCallbacks {
-  final _collisionStartColor = Colors.amber;
-  final _defaultColor = Colors.cyan;
-  late ShapeHitbox hitbox;
-
-  RectangleCollidable(Vector2 position, Vector2? size)
-      : super(
-          position: position,
-          size: size ?? Vector2.all(50),
-          anchor: Anchor.center,
-        );
-
-  @override
-  Future<void> onLoad() async {
-    final defaultPaint = Paint()
-      ..color = _defaultColor
-      ..style = PaintingStyle.stroke;
-    hitbox = RectangleHitbox(isSolid: true)
-      ..paint = defaultPaint
-      ..renderShape = true;
-    add(hitbox);
-  }
-
-  @override
-  void onCollisionStart(
-    Set<Vector2> intersectionPoints,
-    PositionComponent other,
-  ) {
-    super.onCollisionStart(intersectionPoints, other);
-    hitbox.paint.color = _collisionStartColor;
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    super.onCollisionEnd(other);
-    if (!isColliding) {
-      hitbox.paint.color = _defaultColor;
-    }
   }
 }
