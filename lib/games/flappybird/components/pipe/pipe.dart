@@ -6,7 +6,7 @@ import 'package:gameopolis/games/flappybird/game.dart';
 import 'package:gameopolis/utils/utils.dart';
 
 class Pipe extends PositionComponent with HasGameRef<FlappyBirdGame> {
-  Pipe({this.ecart = 46.0}) : super();
+  Pipe({this.ecart = 55.0}) : super();
   final double ecart;
 
   @override

@@ -27,6 +27,7 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/music/
+    - assets/audio/sfx/
     - assets/logo/
 
   # An image asset can refer to one or more resolution-specific "variants", see

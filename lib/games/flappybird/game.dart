@@ -48,7 +48,7 @@ class FlappyBirdGame extends FlameGame
   int score = 0;
   int _highscore = 0;
 
-  double currentSpeed = 150;
+  double currentSpeed = 200;
 
   String scoreString(int score) => score.toString().padLeft(5, '0');
 

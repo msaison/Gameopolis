@@ -1,4 +1,5 @@
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart' hide Image, Gradient;
 import 'package:gameopolis/games/flappybird/game.dart';
 import 'package:gameopolis/games/runner/runner_game.dart';
@@ -16,6 +17,8 @@ List<ShowGames> _games = [
 ];
 
 main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  FlameAudio.bgm.initialize();
   runApp(const MainScreen());
 }
 
@@ -100,10 +103,13 @@ class MainGame extends StatelessWidget {
       body: Stack(
         children: [
           ClipRect(
-            child: GameWidget(
-              game: game,
-              loadingBuilder: (_) => const Center(
-                child: CircularProgressIndicator(),
+            child: AspectRatio(
+              aspectRatio: 9/16,
+              child: GameWidget(
+                game: game,
+                loadingBuilder: (_) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
           ),
