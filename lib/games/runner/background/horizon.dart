@@ -5,33 +5,24 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
-import 'package:gameopolis/games/runner/background/cloud_manager.dart';
 import 'package:gameopolis/games/runner/obstacle/obstacle_manager.dart';
 import 'package:gameopolis/games/runner/runner_game.dart';
 
 class Horizon extends PositionComponent with HasGameRef<RunnerGame> {
   Horizon() : super();
 
-  static final Vector2 lineSize = Vector2(1200, 24);
+  static final Vector2 lineSize = Vector2(1920, 540);
   final Queue<SpriteComponent> groundLayers = Queue();
-  late final CloudManager cloudManager = CloudManager();
   late final ObstacleManager obstacleManager = ObstacleManager();
 
-  late final _softSprite = Sprite(
-    gameRef.spriteImage,
-    srcPosition: Vector2(2.0, 104.0),
-    srcSize: lineSize,
-  );
-
-  late final _bumpySprite = Sprite(
-    gameRef.spriteImage,
-    srcPosition: Vector2(gameRef.spriteImage.width / 2, 104.0),
+  late final _groundSprite = Sprite(
+    gameRef.ground,
+    srcPosition: Vector2(0.0, 540.0),
     srcSize: lineSize,
   );
 
   @override
   Future<void> onLoad() async {
-    add(cloudManager);
     add(obstacleManager);
   }
 
@@ -57,11 +48,10 @@ class Horizon extends PositionComponent with HasGameRef<RunnerGame> {
     final newLines = _generateLines();
     groundLayers.addAll(newLines);
     addAll(newLines);
-    y = (size.y / 2) + 21.0;
+    y = (size.y / 2) + 45.0;
   }
 
   void reset() {
-    cloudManager.reset();
     obstacleManager.reset();
     groundLayers.forEachIndexed((i, line) => line.x = i * lineSize.x);
   }
@@ -72,8 +62,9 @@ class Horizon extends PositionComponent with HasGameRef<RunnerGame> {
     return List.generate(
       max(number, 0),
       (i) => SpriteComponent(
-        sprite: (i + groundLayers.length).isEven ? _softSprite : _bumpySprite,
+        sprite: _groundSprite,
         size: lineSize,
+        // anchor: Anchor.bottomLeft
       )..x = lastX + lineSize.x * i,
       growable: false,
     );

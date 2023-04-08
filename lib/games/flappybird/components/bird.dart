@@ -27,14 +27,14 @@ class BirdPlayer extends SpriteAnimationGroupComponent<PlayerState>
   final Vector2 _resetPos;
 
   final Map<PlayerColor, List<Vector2>> _playerColorMap = {
-    PlayerColor.blue: [Vector2(87, 491), Vector2(115, 329), Vector2(115, 329)],
+    PlayerColor.blue: [Vector2(3, 499), Vector2(31, 499), Vector2(59, 499), Vector2(87, 499)],
     PlayerColor.red: [Vector2(115, 381), Vector2(115, 407), Vector2(115, 433)],
-    PlayerColor.yellow: [Vector2(3, 491), Vector2(31, 491), Vector2(59, 491)],
+    PlayerColor.yellow: [Vector2(3, 485), Vector2(31, 485), Vector2(59, 485), Vector2(87, 485)],
   };
 
   double _vertSpeed = 0.0;
 
-  PlayerColor playerColor = PlayerColor.blue;
+  PlayerColor playerColor = PlayerColor.yellow;
 
   @override
   Future<void> onLoad() async {
@@ -165,7 +165,7 @@ class BirdPlayer extends SpriteAnimationGroupComponent<PlayerState>
   SpriteAnimation _getAnimation({
     required Vector2 size,
     required List<Vector2> frames,
-    double stepTime = 0.08,
+    double stepTime = 0.06,
   }) {
     return SpriteAnimation.spriteList(
       frames

@@ -9,6 +9,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
 import 'package:gameopolis/games/runner/background/horizon.dart';
+import 'package:gameopolis/games/runner/background/parralax.dart';
 import 'package:gameopolis/games/runner/player.dart';
 
 import 'game_over.dart';
@@ -25,13 +26,17 @@ class RunnerGame extends FlameGame with KeyboardEvents, TapDetector, HasCollisio
   ''';
 
   late final Image spriteImage;
+  late final Image ground;
+  late final Image background;
 
   @override
   Color backgroundColor() => const Color(0xFFFFFFFF);
 
   late final player = Player();
+  late final RunnerParralax runnerParralax = RunnerParralax();
   late final horizon = Horizon();
   late final gameOverPanel = GameOverPanel();
+
   late final TextComponent scoreText;
 
   int _score = 0;
@@ -49,11 +54,13 @@ class RunnerGame extends FlameGame with KeyboardEvents, TapDetector, HasCollisio
 
   @override
   Future<void> onLoad() async {
-    spriteImage = await Flame.images.load('trex.png');
-    startBgmMusic();
-    // FlameAudio.bgm.initialize();
-    // FlameAudio.bgm.play('music/carnival.mp3');
+    spriteImage = await Flame.images.load('runner.png');
+    ground = await Flame.images.load('runner_parralax/01_ground.png');
+    // FlameAudio.bgm.play('music/bg_music.ogg');
+    background = await Flame.images.load('runner_parralax/11_background.png');
 
+    add(SpriteComponent.fromImage(background, srcPosition: Vector2(0, 0), srcSize: Vector2(1920, 1080)));
+    add(runnerParralax);
     add(horizon);
     add(player);
     add(gameOverPanel);
@@ -64,7 +71,7 @@ class RunnerGame extends FlameGame with KeyboardEvents, TapDetector, HasCollisio
         source: spriteImage,
         size: 23,
         ascent: 23,
-        glyphs: [for (var i = 0; i < chars.length; i++) Glyph(chars[i], left: 954.0 + 20 * i, top: 0, width: 20)],
+        glyphs: [for (var i = 0; i < chars.length; i++) Glyph(chars[i], left: 0.0 + 20 * i, top: 72, width: 20)],
       ),
       letterSpacing: 2,
     );
@@ -75,11 +82,6 @@ class RunnerGame extends FlameGame with KeyboardEvents, TapDetector, HasCollisio
       )..positionType = PositionType.viewport,
     );
     score = 0;
-  }
-
-  void startBgmMusic() {
-    FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('music/bg_music.ogg');
   }
 
   GameState state = GameState.intro;
@@ -120,9 +122,9 @@ class RunnerGame extends FlameGame with KeyboardEvents, TapDetector, HasCollisio
 
   void gameOver() {
     gameOverPanel.visible = true;
-    state = GameState.gameOver;
-    // FlameAudio.bgm.stop();
     player.current = PlayerState.crashed;
+    state = GameState.gameOver;
+    runnerParralax.parallax!.baseVelocity = Vector2(0, 0);
     currentSpeed = 0.0;
   }
 
@@ -148,6 +150,7 @@ class RunnerGame extends FlameGame with KeyboardEvents, TapDetector, HasCollisio
     }
 
     if (isPlaying) {
+      runnerParralax.parallax!.baseVelocity.x = currentSpeed / 50;
       timePlaying += dt;
       _distanceTraveled += dt * currentSpeed;
       score = _distanceTraveled ~/ 50;

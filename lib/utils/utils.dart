@@ -46,15 +46,17 @@ class Tuple2<T1, T2> {
 }
 
 class ShowGames {
-  ShowGames({required String gameName, DecorationImage? gameImage, required FlameGame gameWidget})
+  ShowGames({required String gameName, DecorationImage? gameImage, required FlameGame gameWidget, required Vector2 gameRatio})
       : _gameName = gameName,
         _gameImage = gameImage,
         _gameWidget = gameWidget,
+        _gameRatio = gameRatio,
         super();
 
   final String _gameName;
   final DecorationImage? _gameImage;
   final FlameGame _gameWidget;
+  final Vector2 _gameRatio;
 
   String get gameName {
     return _gameName;
@@ -67,8 +69,11 @@ class ShowGames {
   FlameGame get gameWidget {
     return _gameWidget;
   }
-}
 
+  Vector2 get gameRatio {
+    return _gameRatio;
+  }
+}
 
 final Paint paintCollision = Paint()
   ..color = Colors.white

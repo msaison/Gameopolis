@@ -43,7 +43,7 @@ class ObstacleTypeSettings {
   static final cactusSmall = ObstacleTypeSettings._internal(
     ObstacleType.cactusSmall,
     size: Vector2(34.0, 70.0),
-    y: -55.0,
+    y: -70.0,
     allowedAt: 0,
     multipleAt: 1000,
     minGap: 120.0,
@@ -93,13 +93,13 @@ class ObstacleTypeSettings {
       case ObstacleType.cactusSmall:
         return Sprite(
           spriteImage,
-          srcPosition: Vector2(446.0, 2.0),
+          srcPosition: Vector2(290.0, 0.0),
           srcSize: size,
         );
       case ObstacleType.cactusLarge:
         return Sprite(
           spriteImage,
-          srcPosition: Vector2(652.0, 2.0),
+          srcPosition: Vector2(335.0, 0.0),
           srcSize: size,
         );
     }

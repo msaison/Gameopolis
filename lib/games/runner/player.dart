@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:gameopolis/games/runner/hat.dart';
 import 'package:gameopolis/games/runner/runner_game.dart';
 
-enum PlayerState { crashed, jumping, running, waiting }
+enum PlayerState { crashed, jumping, running, waiting, die }
 
 // enum HatState { first, second, third }
 
@@ -18,11 +17,6 @@ class Player extends SpriteAnimationGroupComponent<PlayerState> with HasGameRef<
   final double introDuration = 1500.0;
   final double startXPosition = 50;
 
-  final hat = HatComponent(
-    position: Vector2(35, -15),
-    size: Vector2(32, 32),
-  );
-
   double _jumpVelocity = 0.0;
 
   double get groundYPos {
@@ -31,7 +25,6 @@ class Player extends SpriteAnimationGroupComponent<PlayerState> with HasGameRef<
 
   @override
   Future<void> onLoad() async {
-    add(hat);
     // Body hitbox
     add(
       RectangleHitbox.relative(
@@ -50,21 +43,57 @@ class Player extends SpriteAnimationGroupComponent<PlayerState> with HasGameRef<
     );
     animations = {
       PlayerState.running: _getAnimation(
-        size: Vector2(88.0, 90.0),
-        frames: [Vector2(1514.0, 4.0), Vector2(1602.0, 4.0)],
-        stepTime: 0.2,
+        size: Vector2(23.0, 28.0),
+        frames: [
+          Vector2(0.0, 122.0),
+          Vector2(50.0, 122.0),
+          Vector2(99.0, 122.0),
+          Vector2(150.0, 122.0),
+          Vector2(200.0, 122.0),
+          Vector2(250.0, 122.0),
+        ],
+        stepTime: 0.1,
       ),
       PlayerState.waiting: _getAnimation(
-        size: Vector2(88.0, 90.0),
-        frames: [Vector2(76.0, 6.0)],
+        size: Vector2(25.0, 28.0),
+        frames: [
+          Vector2(0.0, 151.0),
+          Vector2(50.0, 151.0),
+          Vector2(100.0, 151.0),
+          Vector2(150.0, 151.0),
+          // Vector2(200.0, 151.0),
+        ],
+        stepTime: 0.1,
       ),
       PlayerState.jumping: _getAnimation(
-        size: Vector2(88.0, 90.0),
-        frames: [Vector2(1339.0, 6.0)],
+        size: Vector2(21.0, 27.0),
+        frames: [
+          Vector2(0.0, 122.0),
+          Vector2(50.0, 122.0),
+          Vector2(100.0, 122.0),
+          Vector2(150.0, 122.0),
+          Vector2(200.0, 122.0),
+          Vector2(250.0, 122.0),
+        ],
       ),
       PlayerState.crashed: _getAnimation(
-        size: Vector2(88.0, 90.0),
-        frames: [Vector2(1782.0, 6.0)],
+        size: Vector2(21.0, 24.0),
+        frames: [
+          Vector2(0.0, 208.0),
+          Vector2(50.0, 208.0),
+          Vector2(100.0, 208.0),
+          Vector2(150.0, 208.0),
+          Vector2(200.0, 208.0),
+          Vector2(250.0, 208.0),
+          Vector2(300.0, 208.0),
+        ],
+        stepTime: 0.1,
+      ),
+      PlayerState.die: _getAnimation(
+        size: Vector2(21.0, 24.0),
+        frames: [
+          Vector2(300.0, 208.0),
+        ],
       ),
     };
     current = PlayerState.waiting;
@@ -88,7 +117,6 @@ class Player extends SpriteAnimationGroupComponent<PlayerState> with HasGameRef<
   @override
   void update(double dt) {
     super.update(dt);
-    // hat.updatePos(position);
     if (current == PlayerState.jumping) {
       y += _jumpVelocity;
       _jumpVelocity += gravity;
@@ -102,6 +130,10 @@ class Player extends SpriteAnimationGroupComponent<PlayerState> with HasGameRef<
     if (gameRef.isIntro && x < startXPosition) {
       x += (startXPosition / introDuration) * dt * 5000;
     }
+
+    if (current == PlayerState.crashed && animation!.isLastFrame) {
+      animation!.stepTime = double.infinity;
+    }
   }
 
   @override
@@ -114,7 +146,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerState> with HasGameRef<
   void onCollisionStart(
     Set<Vector2> intersectionPoints,
     PositionComponent other,
-  ) {
+  ) async {
     super.onCollisionStart(intersectionPoints, other);
     gameRef.gameOver();
   }

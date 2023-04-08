@@ -27,7 +27,7 @@ class GameOverText extends SpriteComponent with HasGameRef<RunnerGame> {
   Future<void> onLoad() async {
     sprite = Sprite(
       gameRef.spriteImage,
-      srcPosition: Vector2(955.0, 26.0),
+      srcPosition: Vector2(0.0, 99.0),
       srcSize: size,
     );
   }
@@ -47,7 +47,7 @@ class GameOverRestart extends SpriteComponent with HasGameRef<RunnerGame> {
   Future<void> onLoad() async {
     sprite = Sprite(
       gameRef.spriteImage,
-      srcPosition: Vector2.all(2.0),
+      srcPosition: Vector2(0.0, 3.0),
       srcSize: size,
     );
   }

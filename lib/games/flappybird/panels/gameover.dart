@@ -19,8 +19,7 @@ class GameOverPanel extends Component with HasGameRef<FlappyBirdGame> {
       pos: (size) => Vector2(size.x / 2, size.y * 0.3),
       anchor: Anchor.center,
     ));
-    add(
-      GetSprite(
+    add(GetSprite(
         srcPos: Vector2(414, 118),
         srcSi: Vector2(52, 29),
         scale: true,
@@ -31,9 +30,14 @@ class GameOverPanel extends Component with HasGameRef<FlappyBirdGame> {
             gameRef.getReady();
             visible = false;
           }
-        },
-      ),
-    );
+        }));
+    add(GetSprite(
+      srcPos: Vector2(3, 259),
+      srcSi: Vector2(113, 57),
+      scale: true,
+      pos: (size) => Vector2(size.x * 0.5, size.y * 0.5),
+      anchor: Anchor.center,
+    ));
     return super.onLoad();
   }
 
