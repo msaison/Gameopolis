@@ -20,7 +20,7 @@ import 'package:gameopolis/games/flappybird/panels/getready.dart';
 enum GameState { playing, intro, gameOver, getReady }
 
 class FlappyBirdGame extends FlameGame
-    with KeyboardEvents, HasCollisionDetection, HasGameRef<FlappyBirdGame>, HasTappableComponents {
+    with KeyboardEvents, HasCollisionDetection, HasGameRef<FlappyBirdGame> {
   FlappyBirdGame();
 
   static const String description = '''
@@ -72,10 +72,9 @@ class FlappyBirdGame extends FlameGame
   bool get isGetReady => state == GameState.getReady;
   bool get isIntro => state == GameState.intro;
 
-  @override
   void onTapUp(TapUpEvent event) {
     onAction();
-    super.onTapUp(event);
+    // super.onTapUp(event);
   }
 
   @override

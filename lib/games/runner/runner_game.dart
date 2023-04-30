@@ -5,7 +5,6 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/text.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
 import 'package:gameopolis/games/runner/background/horizon.dart';

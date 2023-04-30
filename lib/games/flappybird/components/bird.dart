@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/audio_pool.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:gameopolis/games/flappybird/components/get_sprite.dart';
 import 'package:gameopolis/games/flappybird/components/ground.dart';

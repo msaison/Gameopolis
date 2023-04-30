@@ -12,8 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  flame: ^1.6.0
-  flame_audio: ^1.4.0
+  flame: ^1.7.3
+  flame_audio: ^2.0.2
+  flame_tiled: ^1.10.1
 
 dev_dependencies:
   flutter_test:
@@ -26,10 +27,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/tiles/
     - assets/images/runner_parralax/
     - assets/audio/music/
     - assets/audio/sfx/
     - assets/logo/
+    - assets/tiles/
+    - assets/tiles/tsx/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

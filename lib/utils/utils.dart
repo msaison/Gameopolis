@@ -1,7 +1,22 @@
+// import 'dart:math';
+
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 const screenSize = Size(144, 256);
+
+const pi = 3.14159265359;
+
+///     0 implies up/north direction
+///  pi/2 implies right/east direction
+///    pi implies down/south direction
+/// -pi/2 implies left/west direction
+const Map<String, double> direction = {
+  'up': -pi / 2,
+  'left': pi,
+  'right': 0,
+  'down': pi / 2,
+};
 
 class Tuple3<T1, T2, T3> {
   Tuple3({required T1 first, required T2 second, required T3 third})
@@ -46,17 +61,24 @@ class Tuple2<T1, T2> {
 }
 
 class ShowGames {
-  ShowGames({required String gameName, DecorationImage? gameImage, required FlameGame gameWidget, required Vector2 gameRatio})
+  ShowGames(
+      {required String gameName,
+      DecorationImage? gameImage,
+      required FlameGame gameWidget,
+      required Vector2 gameRatio,
+      Map<String, Widget Function(BuildContext, FlameGame)>? gameOverlays})
       : _gameName = gameName,
         _gameImage = gameImage,
         _gameWidget = gameWidget,
         _gameRatio = gameRatio,
+        _map = gameOverlays,
         super();
 
   final String _gameName;
   final DecorationImage? _gameImage;
   final FlameGame _gameWidget;
   final Vector2 _gameRatio;
+  final Map<String, Widget Function(BuildContext, FlameGame)>? _map;
 
   String get gameName {
     return _gameName;
@@ -72,6 +94,10 @@ class ShowGames {
 
   Vector2 get gameRatio {
     return _gameRatio;
+  }
+
+  Map<String, Widget Function(BuildContext, FlameGame)>? get gameOverlays {
+    return _map;
   }
 }
 

@@ -2,9 +2,12 @@ import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart' hide Image, Gradient;
 import 'package:flutter/material.dart';
+import 'package:gameopolis/games/defenders/game.dart';
 import 'package:gameopolis/games/flappybird/game.dart';
 import 'package:gameopolis/games/runner/runner_game.dart';
 import 'package:gameopolis/utils/utils.dart';
+
+import 'games/defenders/components/utils_defenders.dart';
 
 List<ShowGames> _games = [
   ShowGames(
@@ -16,7 +19,20 @@ List<ShowGames> _games = [
       gameName: 'Flappy Bird',
       gameWidget: FlappyBirdGame(),
       gameImage: const DecorationImage(fit: BoxFit.cover, image: AssetImage('assets/logo/flappy_bird_logo.png')),
-      gameRatio: Vector2(9, 16))
+      gameRatio: Vector2(9, 16)),
+  ShowGames(
+    gameName: 'Defenders',
+    gameWidget: DefendersGame(),
+    gameImage: const DecorationImage(fit: BoxFit.cover, image: AssetImage('assets/logo/flappy_bird_logo.png')),
+    gameRatio: Vector2(16, 9),
+    gameOverlays: {
+      'TowerMenu': (context, game) {
+        return TowerMenu(
+          game: game as DefendersGame,
+        );
+      },
+    },
+  ),
 ];
 
 main() {
@@ -79,6 +95,7 @@ class MainScreen extends StatelessWidget {
                                   builder: (_) => MainGame(
                                         game: _games[index].gameWidget,
                                         gameRatio: _games[index].gameRatio,
+                                        overlays: _games[index].gameOverlays,
                                       )),
                               (route) => false),
                           child: Container(
@@ -103,10 +120,11 @@ class MainScreen extends StatelessWidget {
 }
 
 class MainGame extends StatelessWidget {
-  const MainGame({required this.game, required this.gameRatio, super.key});
+  const MainGame({required this.game, required this.gameRatio, this.overlays, super.key});
 
   final FlameGame game;
   final Vector2 gameRatio;
+  final Map<String, Widget Function(BuildContext, FlameGame)>? overlays;
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +137,7 @@ class MainGame extends StatelessWidget {
                 aspectRatio: gameRatio.x / gameRatio.y,
                 child: GameWidget(
                   game: game,
+                  overlayBuilderMap: overlays,
                   loadingBuilder: (_) => const Center(
                     child: CircularProgressIndicator(),
                   ),
