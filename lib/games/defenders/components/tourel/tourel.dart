@@ -1,7 +1,8 @@
-import 'dart:async';
+import 'dart:math';
 
-import 'package:flame/components.dart';
+import 'package:flame/components.dart' hide Timer;
 import 'package:flame/extensions.dart';
+import 'package:gameopolis/games/defenders/components/tourel/components/projectile.dart';
 import 'package:gameopolis/games/defenders/game.dart';
 
 ////////////////////////////////////////
@@ -9,44 +10,29 @@ import 'package:gameopolis/games/defenders/game.dart';
 ////////////////////////////////////////
 
 class TourelManager extends Component with HasGameRef<DefendersGame> {
+  double _timeSinceLastSecond = 0;
+
   @override
   void update(double dt) {
     for (var element in gameRef.tourel) {
-      if (element.canBeAdded()) {
+      if (element.isAdded) {
+        if (element.component.distance(gameRef.enemy) <= 400) {
+          _timeSinceLastSecond += dt;
+
+          if (_timeSinceLastSecond >= 1.0) {
+            if (gameRef.enemy.life > 0) add(ProjectileComponent(gameRef.spriteImage, gameRef.enemy.position, element.endpoint, 2));
+            _timeSinceLastSecond = 0;
+          }
+
+          element.component.lookAt(gameRef.enemy.position);
+        }
+      }
+
+      if (element.canBeAdded() && !element.isAdded) {
         add(element.addTourel()!);
       }
     }
     super.update(dt);
-  }
-}
-
-////////////////////////////////////////
-////////////////////////////////////////
-
-////////////////////////////////////////
-/////////// TOUREL COMPONENT ///////////
-////////////////////////////////////////
-
-class Tourel extends SpriteComponent with HasGameRef<DefendersGame> {
-  Tourel({required this.srcPosT, required this.srcSizeT, required this.position_}) : super(position: position_);
-
-  final Vector2 srcSizeT;
-  final Vector2 srcPosT;
-  final Vector2 position_;
-
-  late final Sprite _sprite;
-  late final SpriteComponent _spriteComponent;
-
-  @override
-  FutureOr<void> onLoad() {
-    _sprite = Sprite(gameRef.spriteImage, srcSize: srcSizeT, srcPosition: srcPosT);
-    _spriteComponent = SpriteComponent(sprite: _sprite);
-    _spriteComponent.position.x += 14;
-    _spriteComponent.position.y += 5;
-    sprite = Sprite(gameRef.spriteImage, srcSize: Vector2(104, 104), srcPosition: Vector2(2444, 908));
-
-    add(_spriteComponent);
-    return super.onLoad();
   }
 }
 
@@ -67,7 +53,7 @@ class TourelInfo {
     required this.spriteImage,
     this.damage,
     this.vitesse,
-  });
+  }) : super();
 
   double? damage;
   double? vitesse;
@@ -97,9 +83,24 @@ class TourelInfo {
     return false;
   }
 
+  late SpriteComponent _spriteComponent;
+
+  SpriteComponent get component => _spriteComponent;
+
+  Vector2 get endpoint {
+    final radians = component.angle + pi / 2;
+    final x = position.x + size.x / 2 + cos(radians) * -50;
+    final y = position.y + size.y / 2 + sin(radians) * -50;
+    return Vector2(x, y);
+  }
+
   SpriteComponent? addTourel() {
-      isAdded = true;
-      return Tourel(srcPosT: srcPosSkin!, srcSizeT: srcSizeSkin!, position_: position);
+    Sprite sprite = Sprite(spriteImage, srcSize: srcSizeSkin, srcPosition: srcPosSkin);
+    _spriteComponent = SpriteComponent(
+        sprite: sprite, position: Vector2((position.x + size.x / 2), (position.y + size.y / 2)), anchor: Anchor.center);
+    isAdded = true;
+
+    return _spriteComponent;
   }
 }
 

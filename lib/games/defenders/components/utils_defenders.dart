@@ -1,7 +1,18 @@
+import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gameopolis/games/defenders/components/tourel/tourel.dart';
 import 'package:gameopolis/games/defenders/game.dart';
+
+void moveTowardsTarget(Vector2 target, double distance, PositionComponent component) {
+  final diff = target - component.position;
+  if (diff.length < distance) {
+    component.position = target;
+  } else {
+    final direction = diff.normalized();
+    component.position += direction * distance;
+  }
+}
 
 TourelInfo? handleMouseClick(List<TourelInfo> squares, Vector2 mousePosition) {
   for (int i = 0; i < squares.length; i++) {
@@ -88,8 +99,8 @@ class _TowerMenuState extends State<TowerMenu> with TickerProviderStateMixin {
                   widget.game.tourel[widget.game.tourelSelect].setup(
                     damage_: 10,
                     vitesse_: 1.25,
-                    srcSizeSkin_: Vector2(76, 92),
-                    srcPosSkin_: Vector2(2458, 1042),
+                    srcSizeSkin_: Vector2(84, 110),
+                    srcPosSkin_: Vector2(2454, 1290),
                   );
                 },
               ),
@@ -104,3 +115,23 @@ class _TowerMenuState extends State<TowerMenu> with TickerProviderStateMixin {
     );
   }
 }
+
+
+////////////////////////////////////////
+///////// ALL TOUREL REGISTER //////////
+////////////////////////////////////////
+// TOUREL SOLO = {
+  // damage: 10,
+  // vitesse: 1.25,
+  // srcSize: Vector2(84, 110),
+  // srcPos: Vector2(1290, 2454),
+// }
+////////////////////////////////////////
+// TOUREL DOUBLE = {
+//   damage: 10;
+//   vitesse: 1.25;
+//   srcSize: Vector2(88, 114);
+//   srcPos: Vector2(1288, 2580);
+// }
+////////////////////////////////////////
+////////////////////////////////////////

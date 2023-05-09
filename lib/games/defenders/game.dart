@@ -7,10 +7,13 @@ import 'package:flame/game.dart';
 import 'package:flame/image_composition.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart' show Paint, Colors, PaintingStyle;
+import 'package:gameopolis/games/defenders/components/enemy/components/enemy.dart';
 import 'package:gameopolis/games/defenders/components/tourel/tourel.dart';
 import 'package:gameopolis/games/defenders/components/utils_defenders.dart';
 // ignore: implementation_imports
 import 'package:gameopolis/utils/utils.dart';
+
+import 'components/enemy/enemy_main.dart';
 
 Vector2 tilesSize = Vector2(1280, 736);
 
@@ -22,10 +25,12 @@ class DefendersGame extends FlameGame
   final TourelManager _tourelManager = TourelManager();
   List<Tuple2<Vector2, String>> pathPos = [];
   List<TourelInfo> tourel = [];
-  // final EnemyMain _enemy = EnemyMain();
-  // final Tourel _tourel = Tourel();
+  final EnemyMain enemy = EnemyMain(100, EnemyState.fantassin);
   Vector2 _scale = Vector2(0, 0);
   int tourelSelect = 0;
+
+  Vector2 get scale => _scale;
+  double get life => enemy.life;
 
   @override
   FutureOr<void> onLoad() async {
@@ -35,7 +40,6 @@ class DefendersGame extends FlameGame
     _scale = Vector2((gameRef.size.x / tilesSize.x), (gameRef.size.y / tilesSize.y));
     spriteImage = await Flame.images.load('tiles/towerDefense_tilesheet@2.png');
     _selectedTourelShow = RectangleComponent()
-      ..priority = 1
       ..paint = paintTourelSelect
       ..renderShape = true;
 
@@ -68,8 +72,9 @@ class DefendersGame extends FlameGame
     }
 
     add(component);
-    add(_tourelManager);
     add(_selectedTourelShow);
+    add(_tourelManager);
+    add(enemy);
     return super.onLoad();
   }
 
@@ -80,7 +85,7 @@ class DefendersGame extends FlameGame
       overlays.remove('TowerMenu');
       _selectedTourelShow.size = info_.size;
       _selectedTourelShow.position = info_.position;
-      tourelSelect = info_.number;
+      tourelSelect = tourel.indexOf(info_);
       overlays.add('TowerMenu');
     } else {
       overlays.remove('TowerMenu');

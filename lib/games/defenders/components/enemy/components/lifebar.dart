@@ -7,9 +7,9 @@ class LifeBar extends PositionComponent {
   static const double _borderRadius = 5;
 
   final double maxLife;
-  double currentLife;
+  late double currentLife;
 
-  LifeBar(this.maxLife, {this.currentLife = 0}) : super(anchor: Anchor.topLeft);
+  LifeBar(this.maxLife) : super(anchor: Anchor.topLeft);
 
   @override
   void render(Canvas canvas) {
